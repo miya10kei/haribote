@@ -1,0 +1,14 @@
+specs:
+  - protocol: http
+    method: get
+    path: /hello
+    status: 200
+    content-type: application/json
+    body: '{ "message": "Hello get" }'
+    delay-mills: 1000
+  - protocol: http
+    method: post
+    path: /hello
+    status: 200
+    content-type: application/json
+    body: '{ "message": "Hello post" }'
