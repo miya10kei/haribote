@@ -21,11 +21,11 @@ dependencies {
   implementation("com.github.ajalt.clikt:clikt:3.2.0")
   implementation("com.charleskorn.kaml:kaml:0.33.0")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.2.1")
-  implementation("org.slf4j:slf4j-api:1.7.30")
 
-  implementation(platform("io.projectreactor:reactor-bom:2020.0.7"))
-  implementation("io.projectreactor.netty:reactor-netty-core")
-  implementation("io.projectreactor.netty:reactor-netty-http")
+  implementation(platform("io.netty:netty-bom:4.1.64.Final"))
+  implementation("io.netty:netty-transport")
+  implementation("io.netty:netty-handler")
+  implementation("io.netty:netty-codec-http")
 }
 
 ktlint {
@@ -53,28 +53,20 @@ nativeImage {
   mainClass = "com.miya10kei.haribote.MainKt"
   executableName = "haribote"
   outputDirectory = file("$buildDir/executable")
-  val classes = listOf(
-    "io.netty.buffer.AbstractByteBufAllocator",
-    "io.netty.channel.AbstractChannel",
-    "io.netty.channel.AbstractChannelHandlerContext",
-    "io.netty.channel.ChannelInitializer",
-    "io.netty.channel.DefaultFileRegion",
-    "io.netty.channel.epoll.Epoll",
-    "io.netty.channel.epoll.EpollEventArray",
-    "io.netty.channel.epoll.EpollEventLoop",
-    "io.netty.channel.epoll.Native",
-    "io.netty.util.internal.PlatformDependent",
-    "io.netty.util.ResourceLeakDetector",
-    "io.netty.buffer.AbstractByteBuf",
-    "io.netty",
-    "io.netty.util.AbstractReferenceCounted",
-    "org.slf4j.LoggerFactory"
-  ).joinToString(",")
   arguments(
-    "--initialize-at-run-time=$classes",
-    "--trace-class-initialization=$classes",
+    "--allow-incomplete-classpath",
+    "--initialize-at-build-time",
+    "--install-exit-handlers",
     "--no-fallback",
-    "-H:+ReportExceptionStackTraces"
+    "--no-server",
+    "--static",
+    "--verbose",
+    "-H:+PrintClassInitialization",
+    "-H:+ReportExceptionStackTraces",
+    "-H:IncludeResources=./(haribote|default-spec).yaml",
+    "-H:Log=registerResource:",
+    "-J-Xms2g",
+    "-J-Xmx2g"
   )
 }
 
