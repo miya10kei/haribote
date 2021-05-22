@@ -20,6 +20,8 @@ jobs:
           - os: macos-latest
             os-name: linux
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
       - name: Setup Graalvm
         id: setup-graalvm
         uses: DeLaGuardo/setup-graalvm@master
