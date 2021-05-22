@@ -41,7 +41,7 @@ jobs:
       - name: Detect version
         id: detect-version
         run: |
-          version=(./gradlew -q version)
+          version=$(./gradlew -q version)
           echo "version=$version"
           echo "::set-output name=version::$version"
       - name: Upload binary
