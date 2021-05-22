@@ -1,5 +1,4 @@
 server:
   http:
     port: 9000
-    enabled-log: true
-    compress: true
+    log-enabled: false

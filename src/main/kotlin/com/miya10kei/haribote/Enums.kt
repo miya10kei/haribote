@@ -23,3 +23,21 @@ enum class HttpMethod {
   @SerialName("delete")
   DELETE,
 }
+
+@Serializable
+enum class LogLevel {
+  @SerialName("trace")
+  TRACE,
+
+  @SerialName("debug")
+  DEBUG,
+
+  @SerialName("info")
+  INFO,
+
+  @SerialName("warn")
+  WARN,
+
+  @SerialName("error")
+  ERROR;
+}

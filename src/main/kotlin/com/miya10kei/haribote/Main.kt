@@ -22,7 +22,11 @@ class Haribote : CliktCommand() {
     val hariboteConfiguration = HariboteConfiguration.load(Configuration.hariboteFile)
     val servers = Servers(hariboteConfiguration.server).start(specs)
 
-    TermUi.repeatUntilEnteringYes("Do you wanna stop?") {
+    servers.info().forEach {
+      TermUi.echo("${it.protocol} server is listening on ${it.port} 🎧")
+    }
+
+    TermUi.repeatUntilEnteringYes("Do you wanna stop ❓") {
       servers.stop()
     }
   }

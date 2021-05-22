@@ -6,6 +6,9 @@ import com.miya10kei.haribote.Specs
 class Servers(private val configuration: ServerConfiguration) {
   private val servers: MutableList<Server> = mutableListOf()
 
+  fun info(): List<ServerInfo> =
+    servers.map { it.info }
+
   fun start(specs: Specs): Servers {
     if (specs.hasHttpSpec()) {
       servers.add(

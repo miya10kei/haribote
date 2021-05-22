@@ -17,15 +17,19 @@ object Configuration {
     }
 
     if (!defaultSpecFile.exists()) {
-      this.javaClass.classLoader.getResource("./$defaultSpecFilename")
+      this::class.java.classLoader.getResource(this.defaultSpecFilename)
         ?.readText()
-        ?.let { defaultSpecFile.writeText(it) }
+        ?.let {
+          defaultSpecFile.writeText(it)
+        }
     }
 
     if (!hariboteFile.exists()) {
-      this.javaClass.classLoader.getResource("./$hariboteFilename")
+      this::class.java.classLoader.getResource(this.hariboteFilename)
         ?.readText()
-        ?.let { hariboteFile.writeText(it) }
+        ?.let {
+          hariboteFile.writeText(it)
+        }
     }
   }
 }

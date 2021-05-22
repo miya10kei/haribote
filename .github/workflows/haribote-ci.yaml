@@ -1,0 +1,58 @@
+name: haribote CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        os-name: [ linux, darwin ]
+        exclude:
+          - os: ubuntu-latest
+            os-name: darwin
+          - os: macos-latest
+            os-name: linux
+    steps:
+      - name: Setup Graalvm
+        id: setup-graalvm
+        uses: DeLaGuardo/setup-graalvm@master
+        with:
+          graalvm: '21.1.0'
+          java: 'java11'
+          arch: 'amd64'
+      - name: Install native-image component
+        run: |
+          gu install native-image
+      - name: Build & test
+        run: |
+          ./gradlew clean build
+      - name: Native-image
+        run: |
+          ./gradlew assemble nativeImage
+      - name: Detect version
+        id: detect-version
+        run: |
+          version=(./gradlew -q version)
+          echo "version=$version"
+          echo "::set-output name=version::$version"
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: haribote-${{ matrix.os-name }}-amd64-${{ step.detect-version.outputs.versiion }}
+          path: build/executable/haribote
+      - name: Notify result to Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+

@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.miya10kei.haribote"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -50,31 +50,22 @@ nativeImage {
   buildType {
     it.executable(main = "com.miya10kei.haribote.MainKt")
   }
-  mainClass = "com.miya10kei.haribote.MainKt"
   executableName = "haribote"
   outputDirectory = file("$buildDir/executable")
   arguments(
-    "--allow-incomplete-classpath",
-    "--initialize-at-build-time",
-    "--install-exit-handlers",
-    "--no-fallback",
-    "--no-server",
-    "--static",
-    "--verbose",
-    "-H:+PrintClassInitialization",
-    "-H:+ReportExceptionStackTraces",
-    "-H:IncludeResources=./(haribote|default-spec).yaml",
-    "-H:Log=registerResource:",
     "-J-Xms2g",
     "-J-Xmx2g"
   )
 }
 
 generateNativeImageConfig {
-  enabled = true
-  byRunningApplicationWithoutArguments()
+  enabled = false
 }
 
 application {
   mainClass.set("com.miya10kei.haribote.MainKt")
+}
+
+tasks.register("version") {
+  println(project.version)
 }

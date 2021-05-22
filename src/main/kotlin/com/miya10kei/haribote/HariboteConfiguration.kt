@@ -25,7 +25,6 @@ class ServerConfiguration(
 @Serializable
 class HttpConfiguration(
   val port: Int,
-  @SerialName("enabled-log")
-  val enabledLog: Boolean,
-  val compress: Boolean
+  @SerialName("log-enabled")
+  val logEnabled: Boolean
 )

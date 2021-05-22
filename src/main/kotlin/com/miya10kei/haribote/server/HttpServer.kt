@@ -11,10 +11,8 @@ import io.netty.channel.ChannelFutureListener
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelOption
-import io.netty.channel.ServerChannel
 import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.codec.http.DefaultFullHttpResponse
@@ -28,6 +26,8 @@ import io.netty.handler.codec.http.HttpServerCodec
 import io.netty.handler.codec.http.HttpServerExpectContinueHandler
 import io.netty.handler.codec.http.HttpUtil
 import io.netty.handler.codec.http.HttpVersion
+import io.netty.handler.logging.LogLevel
+import io.netty.handler.logging.LoggingHandler
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
@@ -36,15 +36,19 @@ class HttpServer(private val configuration: HttpConfiguration) : Server {
   private lateinit var workerGroup: NioEventLoopGroup
   private lateinit var serverChannel: Channel
 
+  override val info: ServerInfo = ServerInfo("http", configuration.port)
+
   override fun start(specs: List<Spec>): Server {
     this.bossGroup = NioEventLoopGroup(1)
     this.workerGroup = NioEventLoopGroup()
+    val logEnabled = configuration.logEnabled
     try {
       this.serverChannel = ServerBootstrap()
         .option(ChannelOption.SO_BACKLOG, 1024)
         .group(bossGroup, workerGroup)
-        .channel(NioServerSocketChannel::class.java)
-//        .handler(LoggingHandler(LogLevel.INFO))
+        .channel(NioServerSocketChannel::class.java).run {
+          if (logEnabled) handler(LoggingHandler(LogLevel.INFO)) else this
+        }
         .childHandler(object : ChannelInitializer<SocketChannel>() {
           override fun initChannel(ch: SocketChannel) {
             ch.pipeline()
