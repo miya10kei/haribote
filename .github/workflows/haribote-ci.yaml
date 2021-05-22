@@ -47,7 +47,7 @@ jobs:
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
-          name: haribote-${{ matrix.os-name }}-amd64-${{ steps.detect-version.outputs.versiion }}
+          name: haribote-${{ matrix.os-name }}-amd64-${{ steps.detect-version.outputs.version }}
           path: build/executable/haribote
       - name: Notify result to Slack
         uses: 8398a7/action-slack@v3
