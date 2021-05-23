@@ -54,6 +54,7 @@ jobs:
           name: haribote-${{ matrix.os-name }}-amd64-${{ steps.detect-version.outputs.version }}
           path: build/executable/haribote
       - name: Compress binary
+        if: github.event_name == 'release'
         run: |
            tar -zcvf ./haribote-${{ matrix.os-name }}-amd64-v${{ steps.detect-version.outputs.version }}.tar.gz build/executable/haribote
       - name: Upload binary to Release assert
@@ -63,7 +64,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          assert_name: haribote-${{ matrix.os-name }}-amd64-v${{ steps.detect-version.outputs.version }}.tar.gz
+          asset_name: haribote-${{ matrix.os-name }}-amd64-v${{ steps.detect-version.outputs.version }}.tar.gz
           asset_path: ./haribote-${{ matrix.os-name }}-amd64-v${{ steps.detect-version.outputs.version }}.tar.gz
           asset_content_type: application/gzip
       - name: Notify result to Slack
