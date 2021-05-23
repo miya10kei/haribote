@@ -56,7 +56,7 @@ jobs:
       - name: Compress binary
         if: github.event_name == 'release'
         run: |
-           tar -zcvf ./haribote-${{ matrix.os-name }}-amd64-v${{ steps.detect-version.outputs.version }}.tar.gz build/executable/haribote
+           tar -C build/executable -zcvf ./haribote-${{ matrix.os-name }}-amd64-v${{ steps.detect-version.outputs.version }}.tar.gz haribote
       - name: Upload binary to Release assert
         uses: actions/upload-release-asset@v1
         if: github.event_name == 'release'
